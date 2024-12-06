@@ -116,9 +116,15 @@ class AdminPanelWindow(QWidget):
         orders = cursor.fetchall()
         conn.close()
 
+        #Создание DataFrame
         df = pd.DataFrame(orders, columns=["ID заказа", "ID клиента", "Сумма", "Статус", "Дата"])
+        #Форматирование столбца "Сумма", как валюта
+        df["Сумма"] = df["Сумма"].apply(lambda x: f"{x:,.2f} руб.".replace(",", " "))
+        #Открытие диалога для выбора пути сохранения
         file_path, _ = QFileDialog.getSaveFileName(self, "Сохранить как", "", "Excel Files (*.xlsx)")
-
         if file_path:
+            #Сохранение данных в Excel
             df.to_excel(file_path, index=False, engine="openpyxl")
             QMessageBox.information(self, "Успех", f"Заказы успешно экспортированы в файл: {file_path}")
+        else:
+            QMessageBox.warning(self, "Отмена", "Вы не выбрали путь для сохранения файла.")
