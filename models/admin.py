@@ -40,7 +40,7 @@ class AdminLoginWindow(QWidget):
         password = self.password_input.text()
 
         if email == "admin@ranepa.ru" and password == "admin123":
-            QMessageBox.information(self, "Успех", "Добро пожаловать, Администратор!")
+            QMessageBox.information(self, "Уведомление", "Добро пожаловать, Администратор!")
             self.open_admin_panel()
         else:
             QMessageBox.warning(self, "Ошибка", "Неверный email или пароль.")
@@ -104,7 +104,7 @@ class AdminPanelWindow(QWidget):
                 cursor.execute("UPDATE OrderTable SET status = ? WHERE id = ?", (new_status, order_id))
                 conn.commit()
                 conn.close()
-                QMessageBox.information(self, "Успех", f"Статус заказа #{order_id} изменён на '{new_status}'.")
+                QMessageBox.information(self, "Уведомление", f"Статус заказа #{order_id} изменён на '{new_status}'.")
                 self.load_orders()
         else:
             QMessageBox.warning(self, "Ошибка", "Выберите заказ для изменения статуса.")
@@ -118,13 +118,11 @@ class AdminPanelWindow(QWidget):
 
         #Создание DataFrame
         df = pd.DataFrame(orders, columns=["ID заказа", "ID клиента", "Сумма", "Статус", "Дата"])
-        #Форматирование столбца "Сумма", как валюта
-        df["Сумма"] = df["Сумма"].apply(lambda x: f"{x:,.2f} руб.".replace(",", " "))
         #Открытие диалога для выбора пути сохранения
         file_path, _ = QFileDialog.getSaveFileName(self, "Сохранить как", "", "Excel Files (*.xlsx)")
         if file_path:
             #Сохранение данных в Excel
             df.to_excel(file_path, index=False, engine="openpyxl")
-            QMessageBox.information(self, "Успех", f"Заказы успешно экспортированы в файл: {file_path}")
+            QMessageBox.information(self, "Уведомление", f"Заказы успешно экспортированы в файл: {file_path}")
         else:
             QMessageBox.warning(self, "Отмена", "Вы не выбрали путь для сохранения файла.")

@@ -61,7 +61,7 @@ class LoginWindow(QWidget):
 
         if user:
             self.user_id, self.user_name = user
-            QMessageBox.information(self, "Успех", f"Добро пожаловать, {self.user_name}!")
+            QMessageBox.information(self, "Уведомление", f"Добро пожаловать, {self.user_name}!")
             self.main_window = MainWindow(self.user_id, self.user_name)
             self.main_window.show()
             self.close()

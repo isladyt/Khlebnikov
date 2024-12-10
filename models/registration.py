@@ -73,7 +73,7 @@ class RegistrationWindow(QWidget):
                 VALUES (?, ?, ?, ?)
             """, (name, phone, email, password))
             conn.commit()
-            QMessageBox.information(self, "Успех", "Регистрация успешна!")
+            QMessageBox.information(self, "Уведомление", "Регистрация успешна!")
             self.close()
         except sqlite3.IntegrityError:
             QMessageBox.warning(self, "Ошибка", "Пользователь с таким email или телефоном уже существует.")

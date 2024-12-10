@@ -29,7 +29,7 @@ def setup_database():
         kitchen TEXT,
         category_id INTEGER,
         ingredients TEXT,
-        price REAL NOT NULL,
+        price TEXT NOT NULL,  -- Цена хранится как строка
         portion_size INTEGER,
         description TEXT,
         photo BLOB,
@@ -42,7 +42,7 @@ def setup_database():
         client_id INTEGER,
         date DATETIME DEFAULT CURRENT_TIMESTAMP,
         status TEXT,
-        amount REAL,
+        amount TEXT,  -- Сумма хранится как строка
         payment_method TEXT,
         FOREIGN KEY (client_id) REFERENCES Client (id)
     )
@@ -63,10 +63,14 @@ def setup_database():
     cursor.execute("SELECT COUNT(*) FROM Dish")
     if cursor.fetchone()[0] == 0:
         dishes = [
-            ("Цезарь", "Европейская", 1, "Курица, салат, сыр, соус", 350.0, 250, "Классический салат с курицей", convert_image_to_blob("images/caesar.jpg")),
-            ("Борщ", "Русская", 2, "Свекла, капуста, картофель, мясо", 200.0, 300, "Традиционный русский суп", convert_image_to_blob("images/borscht.jpg")),
-            ("Тирамису", "Итальянская", 3, "Маскарпоне, кофе, бисквит", 400.0, 200, "Итальянский десерт", convert_image_to_blob("images/tiramisu.jpg")),
-            ("Кофе американо", "Итальянская", 4, "Кофе", 150.0, 200, "Классический черный кофе", convert_image_to_blob("images/americano.jpg"))
+            ("Цезарь", "Европейская", 1, "Курица, салат, сыр, соус", f"{350.00:.2f}", 250, "Классический салат с курицей", convert_image_to_blob("images/caesar.jpg")),
+            ("Борщ", "Русская", 2, "Свекла, капуста, картофель, мясо", f"{200.00:.2f}", 300, "Традиционный русский суп", convert_image_to_blob("images/borscht.jpg")),
+            ("Тирамису", "Итальянская", 3, "Маскарпоне, кофе, бисквит", f"{400.00:.2f}", 200, "Итальянский десерт", convert_image_to_blob("images/tiramisu.jpg")),
+            ("Кофе американо", "Итальянская", 4, "Кофе", f"{150.00:.2f}", 200, "Классический черный кофе", convert_image_to_blob("images/americano.jpg")),
+            ("Оливье", "Русская", 1, "Картофель, колбаса, горошек, майонез", f"{300.00:.2f}", 300, "Популярный праздничный салат", convert_image_to_blob("images/olivier.jpg")),
+            ("Пицца Маргарита", "Итальянская", 2, "Томат, сыр моцарелла, базилик", f"{500.00:.2f}", 400, "Классическая пицца", convert_image_to_blob("images/margherita.jpg")),
+            ("Чизкейк", "Американская", 3, "Сыр, печенье, сахар", f"{450.00:.2f}", 200, "Нежный сырный десерт", convert_image_to_blob("images/cheesecake.jpg")),
+            ("Чай зеленый", "Китайская", 4, "Чайный лист", f"{100.00:.2f}", 250, "Ароматный горячий напиток", convert_image_to_blob("images/green_tea.jpg"))
         ]
         cursor.executemany("""
         INSERT INTO Dish (name, kitchen, category_id, ingredients, price, portion_size, description, photo)

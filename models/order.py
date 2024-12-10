@@ -83,7 +83,7 @@ class OrderWindow(QWidget):
                 dish_id, name, price = dish
                 self.selected_dishes.append((dish_id, name, price))  #Добавляем в список заказов
                 self.order_list.addItem(f"{name} - {price} руб.")  #Обновляем графический список
-                QMessageBox.information(self, "Успех", f"Блюдо '{name}' добавлено в заказ!")
+                QMessageBox.information(self, "Уведомление", f"Блюдо '{name}' добавлено в заказ!")
             else:
                 QMessageBox.warning(self, "Ошибка", "Выберите блюдо из списка.")
         except Exception as e:
@@ -96,7 +96,7 @@ class OrderWindow(QWidget):
             if selected_index >= 0 and selected_index < len(self.selected_dishes):
                 removed_dish = self.selected_dishes.pop(selected_index)
                 self.order_list.takeItem(selected_index)  #Удаляем из графического списка
-                QMessageBox.information(self, "Успех", f"Блюдо '{removed_dish[1]}' удалено из заказа.")
+                QMessageBox.information(self, "Уведомление", f"Блюдо '{removed_dish[1]}' удалено из заказа.")
             else:
                 QMessageBox.warning(self, "Ошибка", "Выберите блюдо, которое хотите удалить из заказа.")
         except Exception as e:
@@ -109,7 +109,7 @@ class OrderWindow(QWidget):
             selected_method, ok = QInputDialog.getItem(self, "Способ оплаты", "Выберите способ оплаты:", payment_methods, 0, False)
             if ok and selected_method:
                 self.payment_method = selected_method
-                QMessageBox.information(self, "Успех", f"Вы выбрали: {selected_method}")
+                QMessageBox.information(self, "Уведомление", f"Вы выбрали: {selected_method}")
             else:
                 QMessageBox.warning(self, "Ошибка", "Вы не выбрали способ оплаты.")
         except Exception as e:
@@ -126,7 +126,7 @@ class OrderWindow(QWidget):
                 QMessageBox.warning(self, "Ошибка", "Выберите способ оплаты.")
                 return
 
-            total_amount = sum(dish[2] for dish in self.selected_dishes)
+            total_amount = sum(float(dish[2]) for dish in self.selected_dishes)
 
             #Запись заказа в базу данных
             conn = sqlite3.connect("restaurant.db")
@@ -134,10 +134,10 @@ class OrderWindow(QWidget):
             cursor.execute("""
                 INSERT INTO OrderTable (client_id, amount, status, payment_method)
                 VALUES (?, ?, ?, ?)
-            """, (self.user_id, total_amount, "Принят", self.payment_method))
+            """, (self.user_id, f"{total_amount:.2f}", "Принят", self.payment_method))
             conn.commit()
 
-            QMessageBox.information(self, "Успех", "Ваш заказ успешно оформлен!")
+            QMessageBox.information(self, "Уведомление", f"Ваш заказ на сумму {total_amount:.2f} руб успешно оформлен!")
             self.selected_dishes = []
             self.order_list.clear()  # Очистка графического списка заказов
             self.payment_method = None

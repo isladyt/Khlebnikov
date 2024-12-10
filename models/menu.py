@@ -104,10 +104,10 @@ class MenuWindow(QWidget):
 
         self.dish_list.clear()
         for dish in self.dishes:
-            self.dish_list.addItem(dish[1])  # Показываем только название блюда
+            self.dish_list.addItem(dish[1])  # Показывается только название блюда
 
     def display_dish_details(self, item):
-        #Отображение фото блюд
+        # Отображение информации о блюде
         selected_index = self.dish_list.currentRow()
         dish_id = self.dishes[selected_index][0]
 
